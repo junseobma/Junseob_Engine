@@ -149,6 +149,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
+
+            HBRUSH brush = CreateSolidBrush(RGB(255, 0, 0)); // 빨강 브러쉬 생성
+            HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, brush); // 빨강 브러쉬 DC에 선택 그리고 반환된 기본 흰색 브러쉬 저장
+            Rectangle(hdc, 100, 100, 200, 200); // (빨강 브러쉬로) 사각형 그리기 
+
+            brush = CreateSolidBrush(RGB(0, 255, 0)); // 녹색 브러쉬 생성
+            SelectObject(hdc, brush); // 녹색 브러쉬 DC에 선택
+            Ellipse(hdc, 150, 150, 300, 300); // (녹색 브러쉬로) 원 그리기
+
+            SelectObject(hdc, oldBrush); // 저장했던 기본 흰색 브러쉬 DC에 선택
+            DeleteObject(brush); // 브러쉬 삭제
+            HPEN pen = CreatePen(PS_SOLID, 5, RGB(0, 0, 255)); // 파랑 펜 생성
+            HPEN oldPen = (HPEN)SelectObject(hdc, pen); // 파랑 펜 DC에 선택 그리고 반환된 기본 검은색 펜 저장
+            Rectangle(hdc, 250, 250, 400, 400); // (기본 흰색 브러쉬와 파랑 펜으로) 사각형 그리기
+
+            pen = CreatePen(PS_DASH, 1, RGB(255, 0, 255)); // 보라색 점선 펜 생성
+            SelectObject(hdc, pen); // 보라색 점선 펜 DC에 선택
+            Ellipse(hdc, 300, 300, 450, 450); // (보라색 점선 펜으로) 원 그리기
+
+            SelectObject(hdc, oldPen); // 저장했던 기본 검은색 펜 DC에 선택
+            DeleteObject(pen); // 펜 삭제
+
+
+
             EndPaint(hWnd, &ps);
         }
         break;
