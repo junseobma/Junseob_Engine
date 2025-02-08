@@ -4,6 +4,12 @@
 #include "framework.h"
 #include "Editor_Window.h"
 
+#include "..\\JunseobEngine_SOURCE\\jsApplication.h"
+
+//#pragma comment(lib, "..\\x64\\Debug\\JunseobEngine_Window.lib")
+
+Application app;
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -25,7 +31,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // 프로그램의 인스턴스 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    //깃허브 테스트
+    //정적 라이브러리 테스트 
+    app.test();
 
     // TODO: 여기에 코드를 입력합니다.
 
@@ -44,15 +51,47 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // 프로그램의 인스턴스 
 
     MSG msg;
 
-    // 기본 메시지 루프입니다:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    // GetMessage()
+    // 프로세스에서 발생한 메시지를 메시지큐에서 가져오는 함수.
+    // 메시지큐에 메시지가 있다면 메시지를 가져와서 메시지 처리 함수로 전달한다.
+    // 하지만 메시지큐에 아무것도 없다면 ? 아무 메시지도 가져오지 않는다.
+
+    // PeekMessage()
+    // 메시지큐에 메시지가 있는지 확인하는 함수로 메시지 유무에 관계없이 함수가 리턴된다.
+    // 리턴값이 true라면 메시지큐에 메시지가 있다는것, 메시지큐에 메시지가 없다면 false를 리턴한다.
+
+    while (true)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+		// 메시지큐에 메시지가 있는지 확인한다.
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+			// 메시지큐에 메시지가 있다면 여기서 처리.
+            if (msg.message == WM_QUIT)
+                break;
+            
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+        else
+        {
+            // 메시지큐에 메시지가 없다면 여기서 처리.
+            // 게임 로직이 들어가는 부분.
         }
     }
+
+
+    // 기본 메시지 루프입니다:
+    //while (GetMessage(&msg, nullptr, 0, 0))
+    //{
+    //    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+    //    {
+    //        TranslateMessage(&msg);
+    //        DispatchMessage(&msg);
+    //    }
+    //}
 
     return (int) msg.wParam;
 }
