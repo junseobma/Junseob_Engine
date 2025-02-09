@@ -1,5 +1,6 @@
 #pragma once
-#include "CommonInclude.h"
+//#include "CommonInclude.h" //#pragma once로 있어도 괜찮지만 지웠음
+#include "jsGameObject.h"
 
 namespace junseob
 {
@@ -19,8 +20,10 @@ namespace junseob
 	private:
 		HWND mHwnd;
 		HDC mHdc;
-		float mSpeed;
-		float mX;
-		float mY;
+
+		// 플레이어
+		//float mX;
+		//float mY;
+		GameObject mPlayer;
 	};
 }
