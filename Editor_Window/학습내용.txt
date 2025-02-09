@@ -117,3 +117,8 @@ Application 클래스는 프로그램의 전반적인 흐름을 관리하는 객체다.
 Initialize() 함수는 자주 사용될 HWND, DC를 멤버변수로 저장한다.
 Run() 함수는 Update(), LateUpdate(), Render()를 나눠서 처리한다.
 하나의 함수에서 모두 처리해도 되지만, 코드의 안정성을 위해 역할에 따라 나눴다. 
+
+[GameObject]
+GameObject란 게임 내에서 사용되는 모든 객체를 의미한다.
+GameObject 클래스는 게임 오브젝트의 기본적인 틀인 Transform(위치, 회전, 스케일)을 가지고 있다.
+또한 Update(), LateUpdate(), Render() 함수를 따로 가지고 있어서 코드를 간결하게 나눠서 관리한다.
