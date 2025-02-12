@@ -1,4 +1,5 @@
 #include "jsApplication.h"
+#include "jsInput.h"
 
 namespace junseob
 {
@@ -19,6 +20,8 @@ namespace junseob
 		mHdc = GetDC(hwnd);
 
 		mPlayer.SetPosition(0, 0);
+
+		Input::Initailize();
 	}
 
 	void Application::Run()
@@ -30,6 +33,8 @@ namespace junseob
 
 	void Application::Update()
 	{
+		Input::Update();
+		
 		mPlayer.Update();
 	}
 
