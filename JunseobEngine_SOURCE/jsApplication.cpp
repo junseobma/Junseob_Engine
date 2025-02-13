@@ -1,5 +1,6 @@
 #include "jsApplication.h"
 #include "jsInput.h"
+#include "jsTime.h"
 
 namespace junseob
 {
@@ -22,6 +23,7 @@ namespace junseob
 		mPlayer.SetPosition(0, 0);
 
 		Input::Initailize();
+		Time::Initailize();
 	}
 
 	void Application::Run()
@@ -34,6 +36,7 @@ namespace junseob
 	void Application::Update()
 	{
 		Input::Update();
+		Time::Update();
 		
 		mPlayer.Update();
 	}
@@ -45,6 +48,7 @@ namespace junseob
 
 	void Application::Render()
 	{
+		Time::Render(mHdc);
 		mPlayer.Render(mHdc);
 	}
 }

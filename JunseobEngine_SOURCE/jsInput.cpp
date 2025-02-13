@@ -2,9 +2,9 @@
 
 namespace junseob
 {
-	std::vector<Input::Key> Input::mKeys = {}; // 전역변수니까 전역영역에 초기화해줘야 된다.
+	std::vector<Input::Key> Input::Keys = {}; // 전역변수니까 전역영역에 초기화해줘야 된다.
 
-	int ASCII[(int)eKeyCode::End] = 
+	int ASCII[(int)eKeyCode::End] =
 	{
 		'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
 		'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
@@ -12,8 +12,17 @@ namespace junseob
 		VK_LEFT, VK_RIGHT, VK_DOWN, VK_UP,
 	};
 
-
 	void Input::Initailize()
+	{
+		createKeys();
+	}
+
+	void Input::Update()
+	{
+		updateKeys();
+	}
+
+	void Input::createKeys()
 	{
 		for (size_t i = 0; i < (UINT)eKeyCode::End; i++)
 		{
@@ -22,36 +31,76 @@ namespace junseob
 			key.state = eKeyState::None;
 			key.keyCode = (eKeyCode)i;
 
-			mKeys.push_back(key);
+			Keys.push_back(key);
 		}
 	}
 
-	void Input::Update()
+	void Input::updateKeys()
 	{
-		//모든 키에 대해 검사
-		for (size_t i = 0; i < mKeys.size(); i++)
+		////모든 키에 대해 검사
+		//for (size_t i = 0; i < Keys.size(); i++)
+		//{
+		//	// 키가 눌렸는지
+		//	if (GetAsyncKeyState(ASCII[i]) & 0x8000)
+		//	{
+		//		if (Keys[i].bPressed == true)
+		//			Keys[i].state = eKeyState::Pressed; // 키가 눌렸고 이전 프레임에 눌려져 있었다. 
+		//		else
+		//			Keys[i].state = eKeyState::Down; // 키가 눌렸고 이전 프레임도 지금도 눌러져 있지 않았다.
+		//		Keys[i].bPressed = true;
+		//	}
+		//	else // 키가 안눌렸는지
+		//	{
+		//		if (Keys[i].bPressed == true)
+		//			Keys[i].state = eKeyState::Up; // 키가 안눌렸고 이전 프레임에 눌려져 있었다.
+		//		else
+		//			Keys[i].state = eKeyState::None; // 키가 안눌렸고 이전 프레임도 눌러져 있지 않았다.
+		//		Keys[i].bPressed = false;
+		//	}
+		//}
+
+		std::for_each(Keys.begin(), Keys.end(),
+			[](Key& key) -> void
+			{
+				updateKey(key);
+			});
+	}
+
+	void Input::updateKey(Input::Key& key)
+	{
+		if (isKeyDown(key.keyCode))
 		{
-			// 키가 눌렸는지
-			if (GetAsyncKeyState(ASCII[i]) & 0x8000) 
-			{
-				if (mKeys[i].bPressed == true)
-					mKeys[i].state = eKeyState::Pressed; // 키가 눌렸고 이전 프레임에 눌려져 있었다. 
-				else 
-					mKeys[i].state = eKeyState::Down; // 키가 눌렸고 이전 프레임도 지금도 눌러져 있지 않았다.
-
-				mKeys[i].bPressed = true;
-			}
-			else // 키가 안눌렸는지
-			{
-				if (mKeys[i].bPressed == true) 
-					mKeys[i].state = eKeyState::Up; // 키가 안눌렸고 이전 프레임에 눌려져 있었다.
-				else 
-					mKeys[i].state = eKeyState::None; // 키가 안눌렸고 이전 프레임도 눌러져 있지 않았다.
-
-				mKeys[i].bPressed = false;
-			}
-
+			updateKeyDown(key);
 		}
+		else
+		{
+			updateKeyUp(key);
+		}
+	}
+
+	bool Input::isKeyDown(eKeyCode code)
+	{
+		return GetAsyncKeyState(ASCII[(UINT)code]) & 0x8000;
+	}
+
+	void Input::updateKeyDown(Input::Key& key)
+	{
+		if (key.bPressed == true)
+			key.state = eKeyState::Pressed; // 키가 눌렸고 이전 프레임에 눌려져 있었다. 
+		else
+			key.state = eKeyState::Down; // 키가 눌렸고 이전 프레임도 지금도 눌러져 있지 않았다.
+
+		key.bPressed = true;
+	}
+
+	void Input::updateKeyUp(Input::Key& key)
+	{
+		if (key.bPressed == true)
+			key.state = eKeyState::Up; // 키가 안눌렸고 이전 프레임에 눌려져 있었다.
+		else
+			key.state = eKeyState::None; // 키가 안눌렸고 이전 프레임도 눌러져 있지 않았다.
+
+		key.bPressed = false;
 	}
 
 }
