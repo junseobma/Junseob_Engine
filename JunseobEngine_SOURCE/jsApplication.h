@@ -18,6 +18,10 @@ namespace junseob
 		void Render();
 
 	private:
+		void clearRenderTarget();
+		void copyRenderTarget(HDC source, HDC dest);
+
+	private:
 		HWND mHwnd;
 		HDC mHdc;
 
@@ -30,6 +34,8 @@ namespace junseob
 		// 플레이어
 		//float mX;
 		//float mY;
-		GameObject mPlayer;
+		
+		//GameObject mPlayer;
+		std::vector<GameObject*> mGameObjects;
 	};
 }

@@ -11,6 +11,7 @@ namespace junseob
 		, mHeight(0)
 		, mBackHdc(nullptr)
 		, mBackBitmap(nullptr)
+		, mGameObjects{}
 	{
 
 	}
@@ -43,10 +44,17 @@ namespace junseob
 		HBITMAP oldBitmap = (HBITMAP)SelectObject(mBackHdc, mBackBitmap);
 		DeleteObject(oldBitmap);
 
-		mPlayer.SetPosition(0, 0);
-
 		Input::Initailize();
 		Time::Initailize();
+
+		for (size_t i = 0; i < 100; i++)
+		{
+			GameObject* gameObj = new GameObject();
+
+			gameObj->SetPosition(rand() % 1600, rand() % 900);
+			mGameObjects.push_back(gameObj);
+		}
+		
 	}
 
 	void Application::Run()
@@ -61,7 +69,12 @@ namespace junseob
 		Input::Update();
 		Time::Update();
 		
-		mPlayer.Update();
+		//mPlayer.Update();
+		for (size_t i = 0; i < mGameObjects.size(); i++)
+		{
+			mGameObjects[i]->Update();
+		}
+
 	}
 
 	void Application::LateUpdate()
@@ -71,16 +84,31 @@ namespace junseob
 
 	void Application::Render()
 	{
-		// 백버퍼(메모리 DC)를 흰색 사각형으로 초기화, 화면 지우기 역할
-		Rectangle(mBackHdc, 0, 0, 1600, 900);
+		clearRenderTarget();
 
-		// 시간 관련 렌더링
-		Time::Render(mBackHdc);
+		Time::Render(mBackHdc); // 시간 관련 렌더링
+		
+		//mPlayer.Render(mBackHdc); // 플레이어 오브젝트 렌더링
+		for (size_t i = 0; i < mGameObjects.size(); i++)
+		{
+			mGameObjects[i]->Render(mBackHdc);
+		}
 
-		// 플레이어 오브젝트 렌더링
-		mPlayer.Render(mBackHdc);
-
-		// 백버퍼의 내용을 실제 화면 DC(원본 버퍼)로 복사하여 출력, 더블 버퍼링
-		BitBlt(mHdc, 0, 0, mWidth, mHeight, mBackHdc, 0, 0, SRCCOPY);
+		copyRenderTarget(mBackHdc, mHdc);
 	}
+
+	// 백버퍼(메모리 DC)를 흰색 사각형으로 초기화, 화면 지우기 역할
+	void  Application::clearRenderTarget()
+	{
+		//Rectangle(mBackHdc, 0, 0, 1600, 900);
+		Rectangle(mBackHdc, -1, -1, 1601, 901); //화면을 가득 채우기 위해서
+	}
+
+	// 백버퍼의 내용을 실제 화면 DC(원본 버퍼)로 복사하여 출력, 더블 버퍼링
+	void Application::copyRenderTarget(HDC source, HDC dest)
+	{
+		BitBlt(dest, 0, 0, mWidth, mHeight, source, 0, 0, SRCCOPY);
+	}
+
+
 }
